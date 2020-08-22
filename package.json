@@ -4,6 +4,7 @@
     "description": "Memory Game",
     "repository": "https://github.com/nikare/memory",
     "license": "ISC",
+    "typings": "src/typings.d.ts",
     "author": {
         "name": "Nikolay Karetskiy",
         "email": "lynxloner@icloud.com"

@@ -1,8 +1,12 @@
 import Phaser from 'phaser';
 
-const game = new Phaser.Game({
-    type: Phaser.AUTO,
+import { Scene } from './Scene';
+
+new Phaser.Game({
+    title: 'Memory',
     width: 1280,
     height: 720,
+    type: Phaser.AUTO,
     parent: 'container',
+    scene: new Scene(),
 });

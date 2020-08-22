@@ -16,3 +16,7 @@ body {
     justify-content: center;
     min-height: 100%;
 }
+
+#container canvas {
+    width: 100%;
+}
