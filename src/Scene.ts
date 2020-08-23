@@ -1,10 +1,10 @@
 import { Card } from '~/components';
 import { Sprites } from '~/assets';
-import { ICoords } from '~/interfaces';
 
 export class Scene extends Phaser.Scene {
-    cards: ICoords[] = [];
+    cards: Card[] = [];
     openedCard: Card | null = null;
+    openedCardsCount = 0;
     rows = 2;
     cols = 5;
 
@@ -22,7 +22,25 @@ export class Scene extends Phaser.Scene {
     create() {
         this.createBackground();
         this.createCards();
+        this.start();
+    }
+
+    start() {
         this.openedCard = null;
+        this.openedCardsCount = 0;
+        this.initCards();
+    }
+
+    initCards() {
+        const positions = this.getCardsPositions();
+
+        this.cards.forEach((card) => {
+            const position = positions.pop();
+            if (position) {
+                card.close();
+                card.setPosition(position.x, position.y);
+            }
+        });
     }
 
     createBackground() {
@@ -31,22 +49,17 @@ export class Scene extends Phaser.Scene {
 
     createCards() {
         this.cards = [];
-        const positions = this.getCardsPositions();
 
         for (let col = this.cols; col--; ) {
             for (let row = this.rows; row--; ) {
-                const lastPosition = positions.pop();
-
-                if (lastPosition) {
-                    this.cards.push(new Card(this, col + 1, lastPosition));
-                }
+                this.cards.push(new Card(this, col + 1));
             }
         }
 
         this.input.on('gameobjectdown', this.onCardClicked, this);
     }
 
-    onCardClicked(pointer: any, card: Card) {
+    onCardClicked(_: Phaser.Events.EventEmitter, card: Card) {
         if (card.opened) {
             return false;
         }
@@ -56,6 +69,7 @@ export class Scene extends Phaser.Scene {
             if (this.openedCard.value === card.value) {
                 // картинки равны - запомнить
                 this.openedCard = null;
+                ++this.openedCardsCount;
             } else {
                 // картинки разные - скрыть прошлую
                 this.openedCard.close();
@@ -67,10 +81,14 @@ export class Scene extends Phaser.Scene {
         }
 
         card.open();
+
+        if (this.openedCardsCount === this.cards.length / 2) {
+            this.start();
+        }
     }
 
     getCardsPositions() {
-        const positions: ICoords[] = [];
+        const positions = [];
         const cardTexture = this.textures.get('CARD').getSourceImage();
         const width = cardTexture.width + 4;
         const height = cardTexture.height + 4;
