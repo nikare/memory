@@ -1,6 +1,6 @@
-import { Card } from './components';
-import { sprites } from './assets';
-import { ICoords } from 'interfaces';
+import { Card } from '~/components';
+import { Sprites } from '~/assets';
+import { ICoords } from '~/interfaces';
 
 export class Scene extends Phaser.Scene {
     cards: ICoords[] = [];
@@ -12,8 +12,9 @@ export class Scene extends Phaser.Scene {
     }
 
     preload() {
-        Object.entries(sprites).forEach(([title, url]) => {
-            this.load.image(title, url);
+        const entries = Object.entries(Sprites).filter((_, index) => index % 2 === 0);
+        entries.forEach(([title, url]) => {
+            this.load.image(title, url.toString());
         });
     }
 
@@ -23,7 +24,7 @@ export class Scene extends Phaser.Scene {
     }
 
     createBackground() {
-        this.add.sprite(0, 0, 'background').setOrigin(0, 0);
+        this.add.sprite(0, 0, 'BACKGROUND').setOrigin(0, 0);
     }
 
     createCards() {
@@ -39,11 +40,17 @@ export class Scene extends Phaser.Scene {
                 }
             }
         }
+
+        this.input.on('gameobjectdown', this.onCardClicked, this);
+    }
+
+    onCardClicked(pointer: any, card: Card) {
+        card.open();
     }
 
     getCardsPositions() {
         const positions: ICoords[] = [];
-        const cardTexture = this.textures.get('card').getSourceImage();
+        const cardTexture = this.textures.get('CARD').getSourceImage();
         const width = cardTexture.width + 4;
         const height = cardTexture.height + 4;
         const offset = {

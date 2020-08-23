@@ -1,6 +1,6 @@
 import Phaser from 'phaser';
 
-import { Scene } from './Scene';
+import { Scene } from '~/Scene';
 
 new Phaser.Game({
     title: 'Memory',

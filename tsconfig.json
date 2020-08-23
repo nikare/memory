@@ -10,7 +10,10 @@
         "noImplicitAny": true,
         "noEmitOnError": true,
         "strictNullChecks": true,
-        "baseUrl": "src"
+        "baseUrl": "./",
+        "paths": {
+            "~/*": ["src/*"]
+        }
     },
     "include": ["src"],
     "exclude": ["node_modules"]

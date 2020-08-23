@@ -6,4 +6,12 @@ import card3 from './card3.png';
 import card4 from './card4.png';
 import card5 from './card5.png';
 
-export const sprites = { background, card, card1, card2, card3, card4, card5 };
+export enum Sprites {
+    BACKGROUND = background,
+    CARD = card,
+    CARD1 = card1,
+    CARD2 = card2,
+    CARD3 = card3,
+    CARD4 = card4,
+    CARD5 = card5,
+}
