@@ -1,4 +1,4 @@
 import { Sprites } from './sprites';
-import { Audio } from './audio';
+import { Sounds } from './sounds';
 
-export { Sprites, Audio };
+export { Sprites, Sounds };
