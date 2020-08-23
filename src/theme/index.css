@@ -1,4 +1,8 @@
 @import 'normalize.css';
+@font-face {
+    font-family: 'CurseCasual';
+    src: url('../assets/fonts/CurseCasual.ttf');
+}
 
 html {
     height: 100%;
@@ -15,4 +19,10 @@ body {
     align-items: center;
     justify-content: center;
     min-height: 100%;
+}
+
+.font-preload {
+    font-family: 'CurseCasual';
+    position: absolute;
+    left: -100px;
 }

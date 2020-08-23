@@ -5,6 +5,7 @@ export class Scene extends Phaser.Scene {
     cards: Card[] = [];
     openedCard: Card | null = null;
     openedCardsCount = 0;
+    timeoutText: any;
     rows = 2;
     cols = 5;
 
@@ -19,8 +20,16 @@ export class Scene extends Phaser.Scene {
         });
     }
 
+    createText() {
+        this.timeoutText = this.add.text(10, 330, 'Time:', {
+            font: '36px CurseCasual',
+            fill: '#fff',
+        });
+    }
+
     create() {
         this.createBackground();
+        this.createText();
         this.createCards();
         this.start();
     }
