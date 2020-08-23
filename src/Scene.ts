@@ -1,13 +1,15 @@
 import { Card } from '~/components';
 import { Sprites } from '~/assets';
+import { config } from './config';
 
 export class Scene extends Phaser.Scene {
     cards: Card[] = [];
     openedCard: Card | null = null;
     openedCardsCount = 0;
-    timeoutText: any;
     rows = 2;
     cols = 5;
+    timeout = 3;
+    timeoutText: Phaser.GameObjects.Text | null = null;
 
     constructor() {
         super('Game');
@@ -21,13 +23,35 @@ export class Scene extends Phaser.Scene {
     }
 
     createText() {
-        this.timeoutText = this.add.text(10, 330, 'Time:', {
+        this.timeoutText = this.add.text(10, 330, '', {
             font: '36px CurseCasual',
             fill: '#fff',
         });
     }
 
+    onTimerTick() {
+        if (this.timeoutText) {
+            this.timeoutText.setText(`Time: ${this.timeout}`);
+        }
+
+        if (this.timeout <= 0) {
+            this.start();
+        } else {
+            --this.timeout;
+        }
+    }
+
+    createTimer() {
+        this.time.addEvent({
+            delay: 1000,
+            callback: this.onTimerTick,
+            callbackScope: this,
+            loop: true,
+        });
+    }
+
     create() {
+        this.createTimer();
         this.createBackground();
         this.createText();
         this.createCards();
@@ -35,6 +59,7 @@ export class Scene extends Phaser.Scene {
     }
 
     start() {
+        this.timeout = config.timer;
         this.openedCard = null;
         this.openedCardsCount = 0;
         this.initCards();

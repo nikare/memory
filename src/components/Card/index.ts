@@ -10,19 +10,20 @@ export class Card extends Phaser.GameObjects.Sprite {
         this.setInteractive();
     }
 
-    flip(texture: string) {
+    flip() {
         this.scene.tweens.add({
             targets: this,
             scaleX: 0,
             ease: 'linear',
             duration: 150,
             onComplete: () => {
-                this.show(texture);
+                this.show();
             },
         });
     }
 
-    show(texture: string) {
+    show() {
+        const texture = this.opened ? 'CARD' + this.value : 'CARD';
         this.setTexture(texture);
         this.scene.tweens.add({
             targets: this,
@@ -34,11 +35,13 @@ export class Card extends Phaser.GameObjects.Sprite {
 
     open() {
         this.opened = true;
-        this.flip('CARD' + this.value);
+        this.flip();
     }
 
     close() {
-        this.opened = false;
-        this.flip('CARD');
+        if (this.opened) {
+            this.opened = false;
+            this.flip();
+        }
     }
 }
