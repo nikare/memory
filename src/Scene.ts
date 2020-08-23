@@ -4,6 +4,7 @@ import { ICoords } from '~/interfaces';
 
 export class Scene extends Phaser.Scene {
     cards: ICoords[] = [];
+    openedCard: Card | null = null;
     rows = 2;
     cols = 5;
 
@@ -21,6 +22,7 @@ export class Scene extends Phaser.Scene {
     create() {
         this.createBackground();
         this.createCards();
+        this.openedCard = null;
     }
 
     createBackground() {
@@ -45,6 +47,25 @@ export class Scene extends Phaser.Scene {
     }
 
     onCardClicked(pointer: any, card: Card) {
+        if (card.opened) {
+            return false;
+        }
+
+        if (this.openedCard) {
+            // уже есть открытая карта
+            if (this.openedCard.value === card.value) {
+                // картинки равны - запомнить
+                this.openedCard = null;
+            } else {
+                // картинки разные - скрыть прошлую
+                this.openedCard.close();
+                this.openedCard = card;
+            }
+        } else {
+            // уже есть открытая карта
+            this.openedCard = card;
+        }
+
         card.open();
     }
 
