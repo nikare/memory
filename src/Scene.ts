@@ -93,8 +93,8 @@ export class Scene extends Phaser.Scene {
         const width = cardTexture.width + 4;
         const height = cardTexture.height + 4;
         const offset = {
-            x: (+this.sys.game.config.width - width * this.cols) / 2,
-            y: (+this.sys.game.config.height - height * this.rows) / 2,
+            x: (+this.sys.game.config.width - width * this.cols) / 2 + width / 2,
+            y: (+this.sys.game.config.height - height * this.rows) / 2 + height / 2,
         };
 
         for (let col = this.cols; col--; ) {
