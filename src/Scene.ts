@@ -91,17 +91,27 @@ export class Scene extends Phaser.Scene {
         this.openedCard = null;
         this.openedCardsCount = 0;
         this.initCards();
+        this.showCards();
     }
 
     initCards() {
-        const positions = this.getCardsPositions();
+        const paramsArr = this.getCardsParams();
 
         this.cards.forEach((card) => {
-            const position = positions.pop();
-            if (position) {
-                card.close();
-                card.setPosition(position.x, position.y);
+            const params = paramsArr.pop();
+            if (params) {
+                card.init(params);
             }
+        });
+    }
+
+    showCards() {
+        this.cards.forEach((card) => {
+            card.move({
+                x: card.position.x,
+                y: card.position.y,
+                delay: card.delay,
+            });
         });
     }
 
@@ -159,8 +169,8 @@ export class Scene extends Phaser.Scene {
         }
     }
 
-    getCardsPositions() {
-        const positions = [];
+    getCardsParams() {
+        const params = [];
         const cardTexture = this.textures.get('CARD').getSourceImage();
         const width = cardTexture.width + 4;
         const height = cardTexture.height + 4;
@@ -169,12 +179,18 @@ export class Scene extends Phaser.Scene {
             y: (Number(config.height) - height * this.rows) / 2 + height / 2,
         };
 
+        let id = 0;
+
         for (let col = this.cols; col--; ) {
             for (let row = this.rows; row--; ) {
-                positions.push({ x: offset.x + col * width, y: offset.y + row * height });
+                params.push({
+                    x: offset.x + col * width,
+                    y: offset.y + row * height,
+                    delay: ++id * 100,
+                });
             }
         }
 
-        return Phaser.Utils.Array.Shuffle(positions);
+        return Phaser.Utils.Array.Shuffle(params);
     }
 }
