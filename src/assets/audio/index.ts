@@ -1,1 +1,1 @@
-export enum Audio {}
+export const audio = {};

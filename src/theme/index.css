@@ -6,7 +6,7 @@ html {
 
 body {
     height: inherit;
-    background: #222;
+    background: #000;
     color: silver;
 }
 
@@ -15,8 +15,4 @@ body {
     align-items: center;
     justify-content: center;
     min-height: 100%;
-}
-
-#container canvas {
-    width: 100%;
 }
