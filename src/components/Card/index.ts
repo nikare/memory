@@ -9,7 +9,9 @@ export class Card extends Phaser.GameObjects.Sprite {
         this.value = value;
         this.setOrigin(0.5, 0.5);
         this.scene.add.existing(this);
-        this.setInteractive();
+        this.setInteractive({
+            useHandCursor: true,
+        });
     }
 
     init(params: { x: number; y: number; delay: number }) {
@@ -36,6 +38,7 @@ export class Card extends Phaser.GameObjects.Sprite {
         this.scene.tweens.add({
             targets: this,
             scaleX: 0,
+            scaleY: 1,
             ease: 'Linear',
             duration: 150,
             onComplete: () => {
@@ -50,9 +53,21 @@ export class Card extends Phaser.GameObjects.Sprite {
         this.scene.tweens.add({
             targets: this,
             scaleX: 1,
+            scaleY: 1,
             ease: 'Linear',
             duration: 150,
         });
+    }
+
+    scaleCard(scale: number) {
+        if (!this.scene.tweens.isTweening(this) && !this.opened) {
+            this.scene.tweens.add({
+                targets: this,
+                scale: scale,
+                ease: 'Linear',
+                duration: 100,
+            });
+        }
     }
 
     open() {

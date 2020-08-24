@@ -129,6 +129,8 @@ export class Scene extends Phaser.Scene {
         }
 
         this.input.on('gameobjectdown', this.onCardClicked, this);
+        this.input.on('gameobjectover', this.onCardOver, this);
+        this.input.on('gameobjectout', this.onCardOut, this);
     }
 
     onCardClicked(_: Phaser.Events.EventEmitter, card: Card) {
@@ -167,6 +169,14 @@ export class Scene extends Phaser.Scene {
             }
             this.start();
         }
+    }
+
+    onCardOver(_: Phaser.Events.EventEmitter, card: Card) {
+        card.scaleCard(1.02);
+    }
+
+    onCardOut(_: Phaser.Events.EventEmitter, card: Card) {
+        card.scaleCard(1);
     }
 
     getCardsParams() {
