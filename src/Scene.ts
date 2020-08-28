@@ -13,6 +13,7 @@ export class Scene extends Phaser.Scene {
     timer: Phaser.Time.TimerEvent | null = null;
     timeout = 3;
     timeoutText: Phaser.GameObjects.Text | null = null;
+    cardsParams: { x: number; y: number; delay: number }[] = [];
 
     constructor() {
         super('Game');
@@ -110,6 +111,7 @@ export class Scene extends Phaser.Scene {
     }
 
     start() {
+        this.initCardsParams();
         this.timeout = config.timer;
         this.openedCard = null;
         this.openedCardsCount = 0;
@@ -121,10 +123,10 @@ export class Scene extends Phaser.Scene {
     }
 
     initCards() {
-        const paramsArr = this.getCardsParams();
+        const cardsParams = Phaser.Utils.Array.Shuffle(this.cardsParams);
 
         this.cards.forEach((card) => {
-            const params = paramsArr.pop();
+            const params = cardsParams.pop();
             if (params) {
                 card.init(params);
             }
@@ -133,6 +135,7 @@ export class Scene extends Phaser.Scene {
 
     showCards() {
         this.cards.forEach((card) => {
+            card.depth = card.delay;
             card.move({
                 x: card.position.x,
                 y: card.position.y,
@@ -187,14 +190,14 @@ export class Scene extends Phaser.Scene {
             this.openedCard = card;
         }
 
-        card.open();
-
-        if (this.openedCardsCount === this.cards.length / 2) {
-            if (this.sounds) {
-                this.sounds.complete.play();
+        card.open(() => {
+            if (this.openedCardsCount === this.cards.length / 2) {
+                if (this.sounds) {
+                    this.sounds.complete.play();
+                }
+                this.restart();
             }
-            this.restart();
-        }
+        });
     }
 
     onCardOver(_: Phaser.Events.EventEmitter, card: Card) {
@@ -205,7 +208,7 @@ export class Scene extends Phaser.Scene {
         card.scaleCard(1);
     }
 
-    getCardsParams() {
+    initCardsParams() {
         const params = [];
         const cardTexture = this.textures.get('CARD').getSourceImage();
         const width = cardTexture.width + 4;
@@ -227,6 +230,6 @@ export class Scene extends Phaser.Scene {
             }
         }
 
-        return Phaser.Utils.Array.Shuffle(params);
+        this.cardsParams = params;
     }
 }
