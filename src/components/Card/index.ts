@@ -22,7 +22,7 @@ export class Card extends Phaser.GameObjects.Sprite {
         this.setPosition(-this.width, -this.height);
     }
 
-    move(params: { x: number; y: number; delay: number }) {
+    move(params: { x: number; y: number; delay: number; callback?: () => void }) {
         this.scene.tweens.add({
             targets: this,
             x: params.x,
@@ -30,7 +30,11 @@ export class Card extends Phaser.GameObjects.Sprite {
             ease: 'Linear',
             duration: 250,
             delay: params.delay,
-            onComplete: () => {},
+            onComplete: () => {
+                if (params.callback) {
+                    params.callback();
+                }
+            },
         });
     }
 

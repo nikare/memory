@@ -10,6 +10,7 @@ export class Scene extends Phaser.Scene {
     openedCardsCount = 0;
     rows = 2;
     cols = 5;
+    timer: Phaser.Time.TimerEvent | null = null;
     timeout = 3;
     timeoutText: Phaser.GameObjects.Text | null = null;
 
@@ -43,17 +44,20 @@ export class Scene extends Phaser.Scene {
         }
 
         if (this.timeout <= 0) {
+            if (this.timer) {
+                this.timer.paused = true;
+            }
             if (this.sounds) {
                 this.sounds.timeout.play();
             }
-            this.start();
+            this.restart();
         } else {
             --this.timeout;
         }
     }
 
     createTimer() {
-        this.time.addEvent({
+        this.timer = this.time.addEvent({
             delay: 1000,
             callback: this.onTimerTick,
             callbackScope: this,
@@ -86,10 +90,32 @@ export class Scene extends Phaser.Scene {
         this.start();
     }
 
+    restart() {
+        let count = 0;
+        const onCardMoveCpmplete = () => {
+            ++count;
+            if (count >= this.cards.length) {
+                this.start();
+            }
+        };
+
+        this.cards.forEach((card) => {
+            card.move({
+                x: Number(config.width) + card.width,
+                y: Number(config.height) + card.height,
+                delay: card.delay,
+                callback: onCardMoveCpmplete,
+            });
+        });
+    }
+
     start() {
         this.timeout = config.timer;
         this.openedCard = null;
         this.openedCardsCount = 0;
+        if (this.timer) {
+            this.timer.paused = false;
+        }
         this.initCards();
         this.showCards();
     }
@@ -167,7 +193,7 @@ export class Scene extends Phaser.Scene {
             if (this.sounds) {
                 this.sounds.complete.play();
             }
-            this.start();
+            this.restart();
         }
     }
 
